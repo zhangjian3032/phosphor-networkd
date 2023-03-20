@@ -72,7 +72,6 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     interfaceName(intfName);
     EthernetInterfaceIntf::dhcpEnabled(dhcpEnabled);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRAFromConf());
-    EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
     const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
     const auto& gateway6List = manager.getRouteTable().getDefaultGateway6();
     std::string defaultGateway;
@@ -115,6 +114,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
 #endif
+
+    EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
 
     // Emit deferred signal.
     if (emitSignal)
